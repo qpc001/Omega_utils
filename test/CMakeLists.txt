@@ -24,7 +24,9 @@ endif(CMAKE_COMPILER_IS_GNUCXX)
 #include_directories(../gtest/googletest/include)
 
 #fundamental/vec2d_test.cc
-add_executable(${PROJECT_NAME}  vec2d_test.cc)
+add_executable(${PROJECT_NAME}
+        vec2d_test.cc
+        search_test.cc)
 #target_link
 target_link_libraries(${PROJECT_NAME} gtest gtest_main common)
 #add_test(NAME {PROJECT_NAME} COMMAND ${PROJECT_NAME})

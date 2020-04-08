@@ -13,10 +13,11 @@ include_directories(
         ${CMAKE_CURRENT_SOURCE_DIR}/fundamental
 )
 set(FUNDAMENTAL_LIB
-        fundamental/vec2d.cc)
-
-add_executable(${PROJECT_NAME}  main_test.cpp)
-target_link_libraries(${PROJECT_NAME} glog absl::strings)
+        fundamental/vec2d.cc
+        fundamental/search.cc)
 
 add_library(common ${FUNDAMENTAL_LIB})
 target_link_libraries(common glog absl::strings)
+
+add_executable(${PROJECT_NAME}  main_test.cpp)
+target_link_libraries(${PROJECT_NAME} glog absl::strings common)
