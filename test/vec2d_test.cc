@@ -14,7 +14,7 @@
  * limitations under the License.
  *****************************************************************************/
 
-#include "../utils/fundamental/vec2d.h"
+#include "vec2d.h"
 
 #include <cmath>
 

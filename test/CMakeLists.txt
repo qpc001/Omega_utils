@@ -12,6 +12,12 @@ endif(CMAKE_COMPILER_IS_GNUCXX)
 find_package(osqp REQUIRED)
 include_directories(${osqp_INCLUDE_DIRS})
 
+# include这些头文件路径
+include_directories(
+        ${CMAKE_CURRENT_SOURCE_DIR}/../utils/fundamental
+        ${CMAKE_CURRENT_SOURCE_DIR}/../utils/type_def
+)
+
 #fundamental/vec2d_test.cc
 add_executable(${PROJECT_NAME}
         vec2d_test.cc

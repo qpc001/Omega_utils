@@ -91,6 +91,12 @@ double CrossProd(const double x0, const double y0, const double x1,
 double InnerProd(const double x0, const double y0, const double x1,
                  const double y1);
 
+// Converts from degrees to radians.    角度到弧度的转换. 60° -> pi/3
+constexpr double DegToRad(double deg) { return M_PI * deg / 180.; }
+
+// Converts form radians to degrees.    弧度到角度的转换, pi/3 -> 60°
+constexpr double RadToDeg(double rad) { return 180. * rad / M_PI; }
+
 /**
  * @brief Wrap angle to [0, 2 * PI).
  * @param angle the original value of the angle.

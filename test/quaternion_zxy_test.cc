@@ -14,7 +14,7 @@
  * limitations under the License.
  *****************************************************************************/
 
-#include "../utils/fundamental/quaternion_zxy.h"
+#include "transform/quaternion_zxy.h"
 
 #include <cmath>
 

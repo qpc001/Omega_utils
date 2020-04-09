@@ -14,7 +14,7 @@
  * limitations under the License.
  *****************************************************************************/
 
-#include "../utils/fundamental/euler_angles_zxy.h"
+#include "transform/euler_angles_zxy.h"
 
 #include <cmath>
 

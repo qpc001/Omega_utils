@@ -8,20 +8,26 @@ if(CMAKE_COMPILER_IS_GNUCXX)
     message(STATUS "optional:-std=c++14")
 endif(CMAKE_COMPILER_IS_GNUCXX)
 
-#fundamental
+# include这些头文件路径
 include_directories(
         ${CMAKE_CURRENT_SOURCE_DIR}/fundamental
+        ${CMAKE_CURRENT_SOURCE_DIR}/type_def
 )
+
+# 需要编译的头文件
 set(FUNDAMENTAL_LIB
-        fundamental/vec2d.cc
+        type_def/vec2d.cc
+        type_def/vec3d.cc
         fundamental/search.cc
         fundamental/matrix_operations.cc
         fundamental/math_utils.cc
         fundamental/integral.cc
-        fundamental/euler_angles_zxy.h)
+        type_def/transform/euler_angles_zxy.h)
 
+# 编译成库
 add_library(common ${FUNDAMENTAL_LIB})
 target_link_libraries(common glog absl::strings)
 
+# 使用说明
 add_executable(${PROJECT_NAME}  main_test.cpp)
 target_link_libraries(${PROJECT_NAME} glog absl::strings common)
