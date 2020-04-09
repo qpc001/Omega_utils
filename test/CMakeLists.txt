@@ -8,25 +8,21 @@ if(CMAKE_COMPILER_IS_GNUCXX)
     message(STATUS "optional:-std=c++14")
 endif(CMAKE_COMPILER_IS_GNUCXX)
 
-#库目录
-#set(TOP_DIR ${CMAKE_CURRENT_LIST_DIR}/../)
-
-#fundamental
-#include_directories(
-#        ${TOP_DIR}/utils/fundamental
-#)
-
-#gtest
-#set(GTEST_ROOT ${PROJECT_SOURCE_DIR}/../gtest/googletest)
-#include_directories(${GTEST_ROOT}/include)
-#message(${GTEST_ROOT}/include)
-#find_package(gtest)
-#include_directories(../gtest/googletest/include)
+#osqp
+find_package(osqp REQUIRED)
+include_directories(${osqp_INCLUDE_DIRS})
 
 #fundamental/vec2d_test.cc
 add_executable(${PROJECT_NAME}
         vec2d_test.cc
-        search_test.cc)
+        search_test.cc
+        matrix_operations_test.cc
+        math_utils_test.cc
+        integral_test.cc
+        euler_angles_zxy_test.cc
+        quaternion_zxy_test.cc)
+
 #target_link
-target_link_libraries(${PROJECT_NAME} gtest gtest_main common)
+target_link_libraries(${PROJECT_NAME} gtest gtest_main  common)
+target_link_libraries(${PROJECT_NAME} PRIVATE osqp::osqp)
 #add_test(NAME {PROJECT_NAME} COMMAND ${PROJECT_NAME})

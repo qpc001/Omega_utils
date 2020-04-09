@@ -14,11 +14,11 @@
  * limitations under the License.
  *****************************************************************************/
 
-#include "modules/common/math/math_utils.h"
+#include "../utils/fundamental/math_utils.h"
 
 #include "gtest/gtest.h"
 
-#include "osqp/include/osqp.h"
+#include "osqp/osqp.h"
 
 namespace Omega {
 namespace common {

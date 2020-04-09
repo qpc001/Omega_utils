@@ -13,6 +13,9 @@ if(CMAKE_COMPILER_IS_GNUCXX)
     message(STATUS "optional:-std=c++14")
 endif(CMAKE_COMPILER_IS_GNUCXX)
 
+#osqp
+find_package(osqp REQUIRED)
+
 #gtest
 add_subdirectory(gtest)
 enable_testing()

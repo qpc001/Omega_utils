@@ -27,7 +27,7 @@
 
 #include "Eigen/Geometry"
 
-#include "modules/common/math/math_utils.h"
+#include "math_utils.h"
 
 /**
  * @namespace Omega::common::math
@@ -45,6 +45,7 @@ namespace math {
  * These rotations are said to be extrinsic if the axes are assumed to be
  * motionless, and intrinsic otherwise. Here, we use an intrinsic referential,
  * which is relative to the car's orientation.
+ *
  * Our vehicle reference frame follows NovAtel's convention:
  * Right/Forward/Up (RFU) respectively for the axes x/y/z.
  * In particular, we describe the orientation of the car by three angles:
@@ -56,6 +57,14 @@ namespace math {
  * The yaw is zero when the car is facing North, and positive when facing West.
  * In turn, in the world frame, the x/y/z axes point to East/North/Up (ENU).
  * These angles represent the rotation from the world to the vehicle frames.
+ *
+ * 对应`右-前-上` 的车体坐标系 x-y-z
+ * 1) 俯仰角pitch：(-pi/2, pi/2) 绕x轴旋转， 车头翘起来则 pitch>0       (逆时针为正)
+ * 2) 横滚角roll:[-pi, pi) 绕y轴旋转，从车尾向车头看，左侧翘起来，则roll>0 (逆时针为正)
+ * 3) 偏航角yaw:[-pi, pi) 绕z轴转，指向西边为正(北偏西)                  (逆时针为正)
+ *
+ * 对应于东北天E-N-U导航坐标系
+ * 这些角度，代表了从 ENU导航坐标系 转换到车体坐标系的变换
  *
  * @brief Implements a class of Euler angles (actually, Tait-Bryan angles),
  * with intrinsic sequence ZXY.
@@ -140,6 +149,7 @@ class EulerAnglesZXY {
 
   /**
    * @brief Verifies the validity of the specified rotation.
+   * 检查pitch是否在范围之内，否则产生 gimbol lock
    * @return True iff -PI/2 < pitch < PI/2
    */
   bool IsValid() {
@@ -149,6 +159,7 @@ class EulerAnglesZXY {
 
   /**
    * @brief Converts to a quaternion with a non-negative scalar part
+   * 欧拉角转四元数
    * @return Quaternion encoding this rotation.
    */
   Eigen::Quaternion<T> ToQuaternion() const {
@@ -174,6 +185,8 @@ class EulerAnglesZXY {
     }
     return {qw, qx, qy, qz};
   }
+
+  //TODO : 欧拉角转旋转矩阵
 
  private:
   T roll_;

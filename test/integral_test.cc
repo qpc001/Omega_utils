@@ -14,7 +14,7 @@
  * limitations under the License.
  *****************************************************************************/
 
-#include "modules/common/math/integral.h"
+#include "../utils/fundamental/integral.h"
 
 #include <cmath>
 

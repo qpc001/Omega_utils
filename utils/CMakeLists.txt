@@ -14,7 +14,11 @@ include_directories(
 )
 set(FUNDAMENTAL_LIB
         fundamental/vec2d.cc
-        fundamental/search.cc)
+        fundamental/search.cc
+        fundamental/matrix_operations.cc
+        fundamental/math_utils.cc
+        fundamental/integral.cc
+        fundamental/euler_angles_zxy.h)
 
 add_library(common ${FUNDAMENTAL_LIB})
 target_link_libraries(common glog absl::strings)

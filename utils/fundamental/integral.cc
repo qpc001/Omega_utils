@@ -14,11 +14,11 @@
  * limitations under the License.
  *****************************************************************************/
 
-#include "modules/common/math/integral.h"
+#include "integral.h"
 
 #include <array>
 
-#include "cyber/common/log.h"
+#include "../log/log.h"
 
 namespace Omega {
 namespace common {

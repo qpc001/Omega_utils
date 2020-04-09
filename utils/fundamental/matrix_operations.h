@@ -28,11 +28,12 @@
 #include "Eigen/Dense"
 #include "Eigen/SVD"
 
-#include "cyber/common/log.h"
+#include "../log/log.h"
 
 /**
  * @namespace Omega::common::math
  * @brief The math namespace deals with a number of useful mathematical objects.
+ * 一些高端操作，一般不会直接用
  */
 namespace Omega {
 namespace common {
@@ -41,6 +42,7 @@ namespace math {
 /**
  * @brief Computes the Moore-Penrose pseudo-inverse of a given square matrix,
  * rounding all eigenvalues with absolute value bounded by epsilon to zero.
+ * 给定方阵，求伪逆
  *
  * @param m The square matrix to be pseudo-inverted
  * @param epsilon A small positive real number (optional; default is 1.0e-6).
@@ -64,6 +66,7 @@ Eigen::Matrix<T, N, N> PseudoInverse(const Eigen::Matrix<T, N, N> &m,
 /**
  * @brief Computes the Moore-Penrose pseudo-inverse of a given matrix,
  * rounding all eigenvalues with absolute value bounded by epsilon to zero.
+ * 给定MxN矩阵，求NxM的伪逆
  *
  * @param m The matrix to be pseudo-inverted
  * @param epsilon A small positive real number (optional; default is 1.0e-6).

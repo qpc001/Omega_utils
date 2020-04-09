@@ -30,9 +30,9 @@
 #include "Eigen/Dense"
 #include "Eigen/Geometry"
 
-#include "modules/common/math/euler_angles_zxy.h"
-#include "modules/common/math/math_utils.h"
-#include "modules/common/proto/geometry.pb.h"
+#include "euler_angles_zxy.h"
+#include "math_utils.h"
+//#include "modules/common/proto/geometry.pb.h"
 
 /**
  * @namespace Omega::common::math
@@ -45,6 +45,8 @@ namespace math {
 /*
  * @brief Returns heading (in radians) in [-PI, PI), with 0 being East.
  * Note that x/y/z is East/North/Up.
+ * 输入: yaw对应的四元数
+ * 输出: heading
  *
  * @param qw Quaternion w-coordinate
  * @param qx Quaternion x-coordinate
@@ -53,11 +55,15 @@ namespace math {
  *
  * @return Heading encoded by given quaternion
  */
-inline double QuaternionToHeading(const double qw, const double qx,
+inline double Quaternion_zxyToHeading(const double qw, const double qx,
                                   const double qy, const double qz) {
   EulerAnglesZXYd euler_angles(qw, qx, qy, qz);
   // euler_angles.yaw() is zero when the car is pointing North, but
   // the heading is zero when the car is pointing East.
+  // * 需要注意的是:
+  // *  1. 当车头指向东边的时候，heading应该是0，而此时的yaw=-pi/2
+  // *  2. 当车头指向真北的时候，heading=pi/2，此时的yaw=0
+  // 这里求的是heading = yaw + Pi/2
   return NormalizeAngle(euler_angles.yaw() + M_PI_2);
 }
 
@@ -70,8 +76,8 @@ inline double QuaternionToHeading(const double qw, const double qx,
  * @return Heading encoded by given quaternion
  */
 template <typename T>
-inline T QuaternionToHeading(const Eigen::Quaternion<T> &q) {
-  return static_cast<T>(QuaternionToHeading(q.w(), q.x(), q.y(), q.z()));
+inline T Quaternion_zxyToHeading(const Eigen::Quaternion<T> &q) {
+  return static_cast<T>(Quaternion_zxyToHeading(q.w(), q.x(), q.y(), q.z()));
 }
 
 /*
@@ -80,12 +86,19 @@ inline T QuaternionToHeading(const Eigen::Quaternion<T> &q) {
  * Note that heading is zero at East and yaw is zero at North.
  * Satisfies QuaternionToHeading(HeadingToQuaternion(h)) = h.
  *
+ * 返回一个四元数，其中，roll=0，pitch=0，
+ * 需要注意的是:
+ *  1. 当车头指向东边的时候，heading应该是0，而此时的yaw=-pi/2
+ *  2. 当车头指向真北的时候，heading=pi/2，此时的yaw=0
+ *
+ *  所以，使用heading来构造四元数的时候，需要减去pi/2, 来得到yaw
+ *
  * @param heading The heading to encode in the rotation
  *
  * @return Quaternion encoding rotation by given heading
  */
 template <typename T>
-inline Eigen::Quaternion<T> HeadingToQuaternion(T heading) {
+inline Eigen::Quaternion<T> HeadingToQuaternion_zxy(T heading) {
   // Note that heading is zero at East and yaw is zero at North.
   EulerAnglesZXY<T> euler_angles(heading - M_PI_2);
   return euler_angles.ToQuaternion();
@@ -100,20 +113,20 @@ inline Eigen::Quaternion<T> HeadingToQuaternion(T heading) {
  *
  * @return Rotated vector
  */
-inline Eigen::Vector3d QuaternionRotate(const Quaternion &orientation,
-                                        const Eigen::Vector3d &original) {
-  Eigen::Quaternion<double> quaternion(orientation.qw(), orientation.qx(),
-                                       orientation.qy(), orientation.qz());
-  return static_cast<Eigen::Vector3d>(quaternion.toRotationMatrix() * original);
-}
-
-inline Eigen::Vector3d InverseQuaternionRotate(const Quaternion &orientation,
-                                               const Eigen::Vector3d &rotated) {
-  Eigen::Quaternion<double> quaternion(orientation.qw(), orientation.qx(),
-                                       orientation.qy(), orientation.qz());
-  return static_cast<Eigen::Vector3d>(quaternion.toRotationMatrix().inverse() *
-                                      rotated);
-}
+//inline Eigen::Vector3d QuaternionRotate(const Quaternion &orientation,
+//                                        const Eigen::Vector3d &original) {
+//  Eigen::Quaternion<double> quaternion(orientation.qw(), orientation.qx(),
+//                                       orientation.qy(), orientation.qz());
+//  return static_cast<Eigen::Vector3d>(quaternion.toRotationMatrix() * original);
+//}
+//
+//inline Eigen::Vector3d InverseQuaternionRotate(const Quaternion &orientation,
+//                                               const Eigen::Vector3d &rotated) {
+//  Eigen::Quaternion<double> quaternion(orientation.qw(), orientation.qx(),
+//                                       orientation.qy(), orientation.qz());
+//  return static_cast<Eigen::Vector3d>(quaternion.toRotationMatrix().inverse() *
+//                                      rotated);
+//}
 
 }  // namespace math
 }  // namespace common
