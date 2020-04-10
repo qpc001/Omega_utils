@@ -33,9 +33,9 @@
  */
 namespace Omega {
 namespace common {
-namespace math {
 
-//constexpr double kMathEpsilon = 1e-10;
+
+
 
 /**
  * @class Vec3d
@@ -72,8 +72,39 @@ public:
         return absl::StrCat("vec3d ( x = ", this->x(), " , y = ", this->y(), " , z= ",this->z(), " )");
     }
 
+    /// 一些运算符重载
+    //! Sums two Vec3d
+    Vec3d operator+(const Vec3d &other) const;
+
+    //! Subtracts two Vec3d
+    Vec3d operator-(const Vec3d &other) const;
+
+    //! Multiplies Vec3d by a scalar
+    Vec3d operator*(const double ratio) const;
+
+    //! Divides Vec3d by a scalar
+    Vec3d operator/(const double ratio) const;
+
+    //! Sums another Vec3d to the current one
+    Vec3d &operator+=(const Vec3d &other);
+
+    //! Subtracts another Vec3d to the current one
+    Vec3d &operator-=(const Vec3d &other);
+
+    //! Multiplies this Vec3d by a scalar
+    Vec3d &operator*=(const double ratio);
+
+    //! Divides this Vec3d by a scalar
+    Vec3d &operator/=(const double ratio);
+
+    //! Compares two Vec3d
+    bool operator==(const Vec3d &other) const;
+
+private:
+    double kMathEpsilon = 1e-10;
+
 };
 
-}  // namespace math
+
 }  // namespace common
 }  // namespace Omega

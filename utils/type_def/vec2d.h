@@ -27,15 +27,13 @@
 #include <Eigen/Core>
 #include "absl/strings/str_cat.h"
 
+
 /**
  * @namespace Omega::common::math
  * @brief Omega::common::math
  */
 namespace Omega {
 namespace common {
-namespace math {
-
-constexpr double kMathEpsilon = 1e-10;
 
 /**
  * @class Vec2d
@@ -46,7 +44,9 @@ constexpr double kMathEpsilon = 1e-10;
 
 class Vec2d : public Eigen::Vector2d {
 public:
-    Vec2d(double x_,double y_) : Eigen::Vector2d(x_,y_) {}
+     Vec2d(const double x, const double y) noexcept : Eigen::Vector2d(x,y) {}
+     Vec2d() noexcept : Vec2d(0, 0) {}
+//    Vec2d(double x_,double y_) : Eigen::Vector2d(x_,y_) {}
 
     void setX(double x_){
         this->x()=x_;
@@ -56,7 +56,7 @@ public:
         this->y()=y_;
     }
 
-    double distanceTo(Vec2d &other){
+    double distanceTo(Vec2d other){
         return std::sqrt(
             (this->x()-other.x())*(this->x()-other.x())+
             (this->y()-other.y())*(this->y()-other.y()));
@@ -67,8 +67,40 @@ public:
         return absl::StrCat("vec2d ( x = ", this->x(), " , y = ", this->y(), " )");
     }
 
+    /// 一些运算符重载
+    //! Sums two Vec2d
+    Vec2d operator+(const Vec2d &other) const;
+
+    //! Subtracts two Vec2d
+    Vec2d operator-(const Vec2d &other) const;
+
+    //! Multiplies Vec2d by a scalar
+    Vec2d operator*(const double ratio) const;
+
+    //! Divides Vec2d by a scalar
+    Vec2d operator/(const double ratio) const;
+
+    //! Sums another Vec2d to the current one
+    Vec2d &operator+=(const Vec2d &other);
+
+    //! Subtracts another Vec2d to the current one
+    Vec2d &operator-=(const Vec2d &other);
+
+    //! Multiplies this Vec2d by a scalar
+    Vec2d &operator*=(const double ratio);
+
+
+
+    //! Divides this Vec2d by a scalar
+    Vec2d &operator/=(const double ratio);
+
+    //! Compares two Vec2d
+    bool operator==(const Vec2d &other) const;
+
+private:
+    double kMathEpsilon = 1e-10;
 };
 
-}  // namespace math
+
 }  // namespace common
 }  // namespace Omega

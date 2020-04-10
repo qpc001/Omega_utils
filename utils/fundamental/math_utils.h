@@ -27,8 +27,6 @@
 
 #include "Eigen/Dense"
 
-#include "vec2d.h"
-
 /**
  * @namespace Omega::common::math
  * @brief Omega::common::math
@@ -39,57 +37,57 @@ namespace math {
 
 double Sqr(const double x);
 
-/**
- * @brief Cross product between two 2-D vectors from the common start point,
- *        and end at two other points.
- * @param start_point The common start point of two vectors in 2-D.
- * @param end_point_1 The end point of the first vector.
- * @param end_point_2 The end point of the second vector.
- *
- * @return The cross product result.
- */
-double CrossProd(const Vec2d &start_point, const Vec2d &end_point_1,
-                 const Vec2d &end_point_2);
-
-/**
- * @brief Inner product between two 2-D vectors from the common start point,
- *        and end at two other points.
- * @param start_point The common start point of two vectors in 2-D.
- * @param end_point_1 The end point of the first vector.
- * @param end_point_2 The end point of the second vector.
- *
- * @return The inner product result.
- */
-double InnerProd(const Vec2d &start_point, const Vec2d &end_point_1,
-                 const Vec2d &end_point_2);
-
-/**
- * @brief Cross product between two vectors.
- *        One vector is formed by 1st and 2nd parameters of the function.
- *        The other vector is formed by 3rd and 4th parameters of the function.
- * @param x0 The x coordinate of the first vector.
- * @param y0 The y coordinate of the first vector.
- * @param x1 The x coordinate of the second vector.
- * @param y1 The y coordinate of the second vector.
- *
- * @return The cross product result.
- */
-double CrossProd(const double x0, const double y0, const double x1,
-                 const double y1);
-
-/**
- * @brief Inner product between two vectors.
- *        One vector is formed by 1st and 2nd parameters of the function.
- *        The other vector is formed by 3rd and 4th parameters of the function.
- * @param x0 The x coordinate of the first vector.
- * @param y0 The y coordinate of the first vector.
- * @param x1 The x coordinate of the second vector.
- * @param y1 The y coordinate of the second vector.
- *
- * @return The inner product result.
- */
-double InnerProd(const double x0, const double y0, const double x1,
-                 const double y1);
+///**
+// * @brief Cross product between two 2-D vectors from the common start point,
+// *        and end at two other points.
+// * @param start_point The common start point of two vectors in 2-D.
+// * @param end_point_1 The end point of the first vector.
+// * @param end_point_2 The end point of the second vector.
+// *
+// * @return The cross product result.
+// */
+//double CrossProd(const Vec2d &start_point, const Vec2d &end_point_1,
+//                 const Vec2d &end_point_2);
+//
+///**
+// * @brief Inner product between two 2-D vectors from the common start point,
+// *        and end at two other points.
+// * @param start_point The common start point of two vectors in 2-D.
+// * @param end_point_1 The end point of the first vector.
+// * @param end_point_2 The end point of the second vector.
+// *
+// * @return The inner product result.
+// */
+//double InnerProd(const Vec2d &start_point, const Vec2d &end_point_1,
+//                 const Vec2d &end_point_2);
+//
+///**
+// * @brief Cross product between two vectors.
+// *        One vector is formed by 1st and 2nd parameters of the function.
+// *        The other vector is formed by 3rd and 4th parameters of the function.
+// * @param x0 The x coordinate of the first vector.
+// * @param y0 The y coordinate of the first vector.
+// * @param x1 The x coordinate of the second vector.
+// * @param y1 The y coordinate of the second vector.
+// *
+// * @return The cross product result.
+// */
+//double CrossProd(const double x0, const double y0, const double x1,
+//                 const double y1);
+//
+///**
+// * @brief Inner product between two vectors.
+// *        One vector is formed by 1st and 2nd parameters of the function.
+// *        The other vector is formed by 3rd and 4th parameters of the function.
+// * @param x0 The x coordinate of the first vector.
+// * @param y0 The y coordinate of the first vector.
+// * @param x1 The x coordinate of the second vector.
+// * @param y1 The y coordinate of the second vector.
+// *
+// * @return The inner product result.
+// */
+//double InnerProd(const double x0, const double y0, const double x1,
+//                 const double y1);
 
 // Converts from degrees to radians.    角度到弧度的转换. 60° -> pi/3
 constexpr double DegToRad(double deg) { return M_PI * deg / 180.; }
@@ -110,6 +108,17 @@ double WrapAngle(const double angle);
  * @return The normalized value of the angle.
  */
 double NormalizeAngle(const double angle);
+
+/**
+ *
+ * @tparam T
+ * @brief Bring the 'difference' between two angles into [-pi; pi].
+ * 将角度差转换为[-pi;pi]
+ * @param difference
+ * @return
+ */
+template <typename T>
+T NormalizeAngleDifference(T difference);
 
 /**
  * @brief Calculate the difference between angle from and to

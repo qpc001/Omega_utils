@@ -32,6 +32,7 @@ double WrapAngle(const double angle) {
   return new_angle < 0 ? new_angle + M_PI * 2.0 : new_angle;
 }
 
+// 将角度归一化到[-pi,pi]
 double NormalizeAngle(const double angle) {
   double a = std::fmod(angle + M_PI, 2.0 * M_PI);
   if (a < 0.0) {
@@ -42,6 +43,16 @@ double NormalizeAngle(const double angle) {
 
 double AngleDiff(const double from, const double to) {
   return NormalizeAngle(to - from);
+}
+
+// Bring the 'difference' between two angles into [-pi; pi].
+//将角度差转换为[-pi;pi]
+template <typename T>
+T NormalizeAngleDifference(T difference) {
+    const T kPi = T(M_PI);
+    while (difference > kPi) difference -= 2. * kPi;
+    while (difference < -kPi) difference += 2. * kPi;
+    return difference;
 }
 
 int RandomInt(const int s, const int t, unsigned int rand_seed) {

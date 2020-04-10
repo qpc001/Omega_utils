@@ -18,6 +18,7 @@ include_directories(
 set(FUNDAMENTAL_LIB
         type_def/vec2d.cc
         type_def/vec3d.cc
+        type_def/transform/rigid_transform.cc
         fundamental/search.cc
         fundamental/matrix_operations.cc
         fundamental/math_utils.cc

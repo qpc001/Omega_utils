@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 The Cartographer Authors
+ * Copyright 2016 The Omega Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef CARTOGRAPHER_COMMON_PORT_H_
-#define CARTOGRAPHER_COMMON_PORT_H_
+#ifndef Omega_COMMON_PORT_H_
+#define Omega_COMMON_PORT_H_
 
 #include <cinttypes>
 #include <cmath>
@@ -30,7 +30,7 @@
   1，使用std::lround对浮点数进行四舍五入取整运算
   2，利用boost的iostreams/filter/gzip对字符串压缩与解压缩
 */
-namespace cartographer {
+namespace Omega {
 
 using int8 = int8_t;
 using int16 = int16_t;
@@ -78,7 +78,7 @@ inline void FastGunzipString(const std::string& compressed,
 }
 
 }  // namespace common
-}  // namespace cartographer
+}  // namespace Omega
 /*
 
 c++11 已经支持back_inserter。
@@ -113,4 +113,4 @@ in.push(file_source("test.txt"));
 ///ref:
 ///http://blog.csdn.net/fhxpp_27/article/details/8473852
 
-#endif  // CARTOGRAPHER_COMMON_PORT_H_
+#endif  // Omega_COMMON_PORT_H_

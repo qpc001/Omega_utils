@@ -25,11 +25,52 @@ namespace Omega
 {
 namespace common
 {
-namespace math
-{
+Vec2d Vec2d::operator+(const Vec2d &other) const {
+    return Vec2d(this->x() + other.x(), this->y() + other.y());
+}
 
+Vec2d Vec2d::operator-(const Vec2d &other) const {
+    return Vec2d(this->x() - other.x(), this->y() - other.y());
+}
 
+Vec2d Vec2d::operator*(const double ratio) const {
+    return Vec2d(this->x() * ratio, this->y() * ratio);
+}
 
-}  // namespace math
+Vec2d Vec2d::operator/(const double ratio) const {
+    CHECK_GT(std::abs(ratio), kMathEpsilon);
+    return Vec2d(this->x() / ratio, this->y() / ratio);
+}
+
+Vec2d &Vec2d::operator+=(const Vec2d &other) {
+    this->x() += other.x();
+    this->y() += other.y();
+    return *this;
+}
+
+Vec2d &Vec2d::operator-=(const Vec2d &other) {
+    this->x() -= other.x();
+    this->y() -= other.y();
+    return *this;
+}
+
+Vec2d &Vec2d::operator*=(const double ratio) {
+    this->x() *= ratio;
+    this->y() *= ratio;
+    return *this;
+}
+
+Vec2d &Vec2d::operator/=(const double ratio) {
+    CHECK_GT(std::abs(ratio), kMathEpsilon);
+    this->x() /= ratio;
+    this->y() /= ratio;
+    return *this;
+}
+
+bool Vec2d::operator==(const Vec2d &other) const {
+    return (std::abs(this->x() - other.x()) < kMathEpsilon &&
+        std::abs(this->y() - other.y()) < kMathEpsilon);
+}
+
 }  // namespace common
 }  // namespace Omega

@@ -25,11 +25,56 @@ namespace Omega
 {
 namespace common
 {
-namespace math
-{
+Vec3d Vec3d::operator+(const Vec3d &other) const {
+    return Vec3d(this->x() + other.x(), this->y() + other.y(),this->z()+other.z());
+}
 
+Vec3d Vec3d::operator-(const Vec3d &other) const {
+    return Vec3d(this->x() - other.x(), this->y() - other.y(),this->z()-other.z());
+}
 
+Vec3d Vec3d::operator*(const double ratio) const {
+    return Vec3d(this->x() * ratio, this->y() * ratio, this->z()*ratio);
+}
 
-}  // namespace math
+Vec3d Vec3d::operator/(const double ratio) const {
+    CHECK_GT(std::abs(ratio), kMathEpsilon);
+    return Vec3d(this->x() / ratio, this->y() / ratio, this->z()/ratio);
+}
+
+Vec3d &Vec3d::operator+=(const Vec3d &other) {
+    this->x() += other.x();
+    this->y() += other.y();
+    this->z() += other.z();
+    return *this;
+}
+
+Vec3d &Vec3d::operator-=(const Vec3d &other) {
+    this->x() -= other.x();
+    this->y() -= other.y();
+    this->z() -= other.z();
+    return *this;
+}
+
+Vec3d &Vec3d::operator*=(const double ratio) {
+    this->x() *= ratio;
+    this->y() *= ratio;
+    this->z() *= ratio;
+    return *this;
+}
+
+Vec3d &Vec3d::operator/=(const double ratio) {
+    CHECK_GT(std::abs(ratio), kMathEpsilon);
+    this->x() /= ratio;
+    this->y() /= ratio;
+    this->z() /= ratio;
+    return *this;
+}
+
+bool Vec3d::operator==(const Vec3d &other) const {
+    return (std::abs(this->x() - other.x()) < kMathEpsilon &&
+        std::abs(this->y() - other.y()) < kMathEpsilon &&
+        std::abs(this->z() - other.z())< kMathEpsilon);
+}
 }  // namespace common
 }  // namespace Omega
