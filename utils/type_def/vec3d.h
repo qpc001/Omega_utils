@@ -123,6 +123,5 @@ Vec3d operator*(Eigen::MatrixBase<T> R_, Vec3d pt_)
                  R_(2, 0) * pt_.x() + R_(2, 1) * pt_.y() + R_(2, 2) * pt_.z());
 }
 
-// abc
 }  // namespace common
 }  // namespace Omega
