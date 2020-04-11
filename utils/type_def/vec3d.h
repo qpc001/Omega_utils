@@ -34,9 +34,6 @@
 namespace Omega {
 namespace common {
 
-
-
-
 /**
  * @class Vec3d
  *
@@ -47,6 +44,7 @@ namespace common {
 class Vec3d : public Eigen::Vector3d {
 public:
     Vec3d(double x_,double y_,double z_) : Eigen::Vector3d(x_,y_,z_) {}
+    Vec3d(Eigen::Vector3d pt_): Eigen::Vector3d(pt_){}
 
     void setX(double x_){
         this->x()=x_;
@@ -104,7 +102,6 @@ private:
     double kMathEpsilon = 1e-10;
 
 };
-
 
 }  // namespace common
 }  // namespace Omega

@@ -16,7 +16,7 @@
 
 /**
  * @file
- * @brief Defines the EulerAnglesZXY class.
+ * @brief Defines the EulerAnglesZYX class.
  */
 
 #pragma once
@@ -41,47 +41,27 @@ namespace math
 {
 
 /**
- * @class EulerAnglesZXY
+ * @class EulerAnglesZYX
  *
- * Any orientation of a rigid body on a 3-D space can be achieved by
- * composing three rotations about the axes of an orthogonal coordinate system.
- * These rotations are said to be extrinsic if the axes are assumed to be
- * motionless, and intrinsic otherwise. Here, we use an intrinsic referential,
- * which is relative to the car's orientation.
+ * 对应`前-右-下` 的车体坐标系 `x-y-z`
+ * 描述: X轴指向前进方向，Y轴指向车体右侧，Z轴指向下方
+ * 1) 俯仰角pitch:  (-pi/2, pi/2) 绕y轴旋转                     (逆时针为正)
+ * 2) 横滚角roll:   [-pi, pi)     绕x轴旋转                     (逆时针为正)
+ * 3) 偏航角yaw:    [-pi, pi)     绕z轴旋转                     (逆时针为正)
  *
- * Our vehicle reference frame follows NovAtel's convention:
- * Right/Forward/Up (RFU) respectively for the axes x/y/z.
- * In particular, we describe the orientation of the car by three angles:
- * 1) the pitch, in (-pi/2, pi/2), corresponds to a rotation around the x-axis;
- * 2) the roll, in [-pi, pi), corresponds to a rotation around the y-axis;
- * 3) the yaw, in [-pi, pi), corresponds to a rotation around the z-axis.
- * The pitch is zero when the car is level and positive when the nose is up.
- * The roll is zero when the car is level and positive when the left part is up.
- * The yaw is zero when the car is facing North, and positive when facing West.
- * In turn, in the world frame, the x/y/z axes point to East/North/Up (ENU).
- * These angles represent the rotation from the world to the vehicle frames.
+ * 对应于`北-东-地` 即N-E-D导航坐标系
+ * 这些角度，代表了从 `NED导航坐标系` 转换到 `车体坐标系` 的变换
  *
- * 对应`右-前-上` 的车体坐标系 x-y-z
- * 1) 俯仰角pitch：(-pi/2, pi/2) 绕x轴旋转， 车头翘起来则 pitch>0       (逆时针为正)
- * 2) 横滚角roll:[-pi, pi) 绕y轴旋转，从车尾向车头看，左侧翘起来，则roll>0 (逆时针为正)
- * 3) 偏航角yaw:[-pi, pi) 绕z轴转，指向西边为正(北偏西)                  (逆时针为正)
- *
- * 对应于东北天E-N-U导航坐标系
- * 这些角度，代表了从 `ENU导航坐标系` 转换到 `车体坐标系` 的变换
- *
- * 其中，从 `ENU导航坐标系` 转换到 `车体坐标系` 的对齐是指:
- *  1. 车体坐标系的 X轴 对齐 ENU坐标系的X轴， 即东侧
- *  2. 车体坐标系的 Y轴 对齐 ENU坐标系的Y轴， 即北侧
- *  3. 车体坐标系的 Z轴 对齐 ENU坐标系的Z轴， 即向上
+ * 其中，从 `NED导航坐标系` 转换到 `车体坐标系` 的对齐是指:
+ *  1. 车体坐标系的 X轴 对齐 NED坐标系的X轴， 即北侧
+ *  2. 车体坐标系的 Y轴 对齐 ENU坐标系的Y轴， 即东侧
+ *  3. 车体坐标系的 Z轴 对齐 ENU坐标系的Z轴， 即向下
  *
  *  此时，roll=0, pitch=0 , yaw=0
- *  但是，可以看到，车头，实际上是指向北面的，即坐标系对齐之后，车头是指向北面的=====>
- *  因此，在zxy（312）顺序-ENU 这种情况下， yaw角 和 车头相对于东方(也就是导航坐标系的x轴)的角度 是不相同的
- *  yaw=0 , 车头指向北方
- *  yaw=-pi/2 , 车头指向东方
+ *  但是，可以看到，车头，实际上是指向北面的，即坐标系对齐之后，车头是指向北面的
  *
  * @brief Implements a class of Euler angles (actually, Tait-Bryan angles),
- * with intrinsic sequence ZXY.
+ * with intrinsic sequence ZYX.
  * 注意事项:
  *       1. 与欧拉角的顺序有关: 欧拉角转: 1. 四元数  2. 旋转矩阵
  *       2. 与欧拉角的顺序无关: 旋转矩阵(DCM)<=====>四元数(q)
@@ -89,13 +69,13 @@ namespace math
  * @param T Number type: double or float
  */
 template<typename T>
-class EulerAnglesZXY
+class EulerAnglesZYX
 {
 public:
     /**
      * @brief Constructs an identity rotation.
      */
-    EulerAnglesZXY()
+    EulerAnglesZYX()
         : roll_(0), pitch_(0), yaw_(0)
     {}
 
@@ -104,7 +84,7 @@ public:
      *
      * @param yaw The yaw of the car
      */
-    explicit EulerAnglesZXY(T yaw)
+    explicit EulerAnglesZYX(T yaw)
         : roll_(0), pitch_(0), yaw_(yaw)
     {}
 
@@ -115,7 +95,7 @@ public:
      * @param pitch The pitch of the car
      * @param yaw The yaw of the car
      */
-    EulerAnglesZXY(T roll, T pitch, T yaw)
+    EulerAnglesZYX(T roll, T pitch, T yaw)
         : roll_(roll), pitch_(pitch), yaw_(yaw)
     {}
 
@@ -127,22 +107,38 @@ public:
      * @param qy Quaternion y-coordinate
      * @param qz Quaternion z-coordinate
      */
-    EulerAnglesZXY(T qw, T qx, T qy, T qz)
-        : roll_(std::atan2(static_cast<T>(2.0) * (qw * qy - qx * qz),
-                           static_cast<T>(2.0) * (Square<T>(qw) + Square<T>(qz)) -
-                               static_cast<T>(1.0))),
-          pitch_(std::asin(static_cast<T>(2.0) * (qw * qx + qy * qz))),
-          yaw_(std::atan2(static_cast<T>(2.0) * (qw * qz - qx * qy),
-                          static_cast<T>(2.0) * (Square<T>(qw) + Square<T>(qy)) -
-                              static_cast<T>(1.0)))
-    {}
+    EulerAnglesZYX(T qw, T qx, T qy, T qz)
+    {
+        // roll (x-axis rotation)
+        T sinr_cosp = 2 * (qw * qx + qy * qz);
+        T cosr_cosp = 1 - 2 * (qx * qx + qy * qy);
+
+        T roll = std::atan2(sinr_cosp, cosr_cosp);
+
+        // pitch (y-axis rotation)
+        T pitch=0;
+        T sinp = 2 * (qw * qy - qz * qx);
+        if (std::abs(sinp) >= 1)
+            pitch = std::copysign(M_PI / 2, sinp); // use 90 degrees if out of range
+        else
+            pitch = std::asin(sinp);
+
+        // yaw (z-axis rotation)
+        T siny_cosp = 2 * (qw * qz + qx * qy);
+        T cosy_cosp = 1 - 2 * (qy * qy + qz * qz);
+        T  yaw = std::atan2(siny_cosp, cosy_cosp);
+
+        roll_=roll;
+        pitch_=pitch;
+        yaw_=yaw;
+    }
 
     /**
      * @brief Constructs a rotation from quaternion.
      * @param q Quaternion
      */
-    explicit EulerAnglesZXY(const Eigen::Quaternion<T> &q)
-        : EulerAnglesZXY(q.w(), q.x(), q.y(), q.z())
+    explicit EulerAnglesZYX(const Eigen::Quaternion<T> &q)
+        : EulerAnglesZYX(q.w(), q.x(), q.y(), q.z())
     {}
 
     /**
@@ -191,6 +187,7 @@ public:
      * @brief Converts to a quaternion with a non-negative scalar part
      * 欧拉角转四元数 : 这里返回的是 从 `body系` 到 `ENU导航坐标系` 的变换 , 因为从 `body系` 到 `ENU导航坐标系` 更加通用
      * (尽管欧拉角是从 `ENU导航坐标系` 到 `body系` 的)
+     * 代码实现: From wiki [四元数与欧拉角之间的转换](https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles#Euler_Angles_to_Quaternion_Conversion)
      * @return Quaternion encoding this rotation.
      */
     Eigen::Quaternion<T> ToQuaternion() const
@@ -208,10 +205,10 @@ public:
       T cp = std::cos(p);
       T cy = std::cos(y);
 
-      T qw = cr * cp * cy - sr * sp * sy;
-      T qx = cr * sp * cy - sr * cp * sy;
-      T qy = cr * sp * sy + sr * cp * cy;
-      T qz = cr * cp * sy + sr * sp * cy;
+      T qw = cr * cp * cy + sr * sp * sy;
+      T qx = sr * cp * cy - cr * sp * sy;
+      T qy = cr * sp * cy + sr * cp * sy;
+      T qz = cr * cp * sy - sr * sp * cy;
       if (qw < 0.0) {
         return {-qw, -qx, -qy, -qz};
       }
@@ -228,18 +225,18 @@ public:
       double sp=sin(pitch_);
       double sy=sin(yaw_);
 
-      // 构造从`ENU导航坐标系` 到 `body系`的旋转变换
+      // 构造从`NED导航坐标系` 到 `body系`的旋转变换
       Eigen::Matrix<T,3,3> R_;
-      R_(0,0)=cy*cr-sy*sp*sr;
-      R_(0,1)=sy*cr+cy*sp*sr;
-      R_(0,2)=-cp*sr;
-      R_(1,0)=-sy*cp;
-      R_(1,1)=cy*cp;
-      R_(1,2)=sp;
-      R_(2,0)=cy*sr+sy*sp*cr;
-      R_(2,1)=sy*sr-cy*sp*cr;
-      R_(2,2)=cp*cr;
-      // 返回从`body系`到`ENU导航坐标系`的旋转变换
+      R_(0,0)=cp*cy;
+      R_(0,1)=cp*sy;
+      R_(0,2)=-sp;
+      R_(1,0)=-cr*sy+sr*sp*cy;
+      R_(1,1)=cr*cy+sr*sp*sy;
+      R_(1,2)=sr*cp;
+      R_(2,0)=sr*sy+cr*sp*cy;
+      R_(2,1)=-sr*cy+cr*sp*sy;
+      R_(2,2)=cr*cp;
+      // 返回从`body系`到`NED导航坐标系`的旋转变换
       return R_.transpose();
     }
 
@@ -249,32 +246,8 @@ private:
     T yaw_;
 };
 
-using EulerAnglesZXYf = EulerAnglesZXY<float>;
-using EulerAnglesZXYd = EulerAnglesZXY<double>;
-
-template <typename T>
-Eigen::Matrix<T,3,3> q2DCM(Eigen::Quaternion<T> q_){
-  double qw=q_.w();
-  double qx=q_.x();
-  double qy=q_.y();
-  double qz=q_.z();
-  double qw2=qw*qw;
-  double qx2=qx*qx;
-  double qy2=qy*qy;
-  double qz2=qz*qz;
-  Eigen::Matrix<T,3,3> R_;
-  R_(0,0)=qw2+qx2-qy2-qz2;
-  R_(0,1)=2*(qx*qy-qw*qz);
-  R_(0,2)=2*(qx*qz+qw*qy);
-  R_(1,0)=2*(qx*qy+qw*qz);
-  R_(1,1)=qw2-qx2+qy2-qz2;
-  R_(1,2)=2*(qy*qz-qw*qx);
-  R_(2,0)=2*(qx*qz-qw*qy);
-  R_(2,1)=2*(qy*qz+qw*qx);
-  R_(2,2)=qw2-qx2-qy2+qz2;
-  return  R_;
-}
-
+using EulerAnglesZYXf = EulerAnglesZYX<float>;
+using EulerAnglesZYXd = EulerAnglesZYX<double>;
 
 }  // namespace math
 }  // namespace common

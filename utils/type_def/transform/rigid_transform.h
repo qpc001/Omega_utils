@@ -20,16 +20,14 @@
 #include <cmath>
 #include <iostream>
 #include <string>
-#include <vec2d.h>
 
 #include "Eigen/Core"
 #include "Eigen/Geometry"
 
-//#include "Omega/common/math.h"
 #include "math_utils.h"
 #include "port.h"
-
 #include "vec2d.h"
+#include "vec3d.h"
 
 /** 刚体变换2D/3D 类
  *
@@ -65,6 +63,11 @@ public:
 
     static Transform2d<FloatType> Identity()
     { return Transform2d<FloatType>(); }
+
+    // 设置平移
+    void setTranslate(Vector t){
+        this->translate(t);
+    }
 
     // 求旋转角度， 逆时针为正
     double getAngle() const{
@@ -146,7 +149,7 @@ using Transform2df = Transform2d<float>;
 //=====================================================================
 ///3D
 template<typename FloatType>
-class Transform3d
+class Transform3d : public Eigen::Isometry3d
 {
 public:
     using Vector = Eigen::Matrix<FloatType, 3, 1>;
@@ -154,39 +157,15 @@ public:
     using AngleAxis = Eigen::AngleAxis<FloatType>;
 
     //构造函数 1.平移+四元数 2.平移+轴角
-    Transform3d()
-        : translation_(Vector::Zero()), rotation_(Quaternion::Identity())
-    {}
+    Transform3d() : Eigen::Isometry3d(Eigen::Isometry3d::Identity()) {}
+    Transform3d(Eigen::Isometry3d T_) : Eigen::Isometry3d(T_) {}
     Transform3d(const Vector &translation, const Quaternion &rotation)
-        : translation_(translation), rotation_(rotation)
+    : Eigen::Isometry3d(rotation,translation)
     {}
     Transform3d(const Vector &translation, const AngleAxis &rotation)
-        : translation_(translation), rotation_(rotation)
+    : Eigen::Isometry3d(rotation,translation)
     {}
 
-    //设置旋转
-    static Transform3d Rotation(const AngleAxis &angle_axis)
-    {
-        return Transform3d(Vector::Zero(), Quaternion(angle_axis));
-    }
-
-    static Transform3d Rotation(const Quaternion &rotation)
-    {
-        return Transform3d(Vector::Zero(), rotation);
-    }
-    //设置平移
-    static Transform3d Translation(const Vector &vector)
-    {
-        return Transform3d(vector, Quaternion::Identity());
-    }
-    //从std::array中获取值
-    static Transform3d FromArrays(const std::array<FloatType, 4> &rotation,
-                                  const std::array<FloatType, 3> &translation)
-    {
-        return Transform3d(Eigen::Map<const Vector>(translation.data()),
-                           Eigen::Quaternion<FloatType>(rotation[0], rotation[1],
-                                                        rotation[2], rotation[3]));
-    }
 
     static Transform3d<FloatType> Identity()
     { return Transform3d<FloatType>(); }
@@ -194,20 +173,53 @@ public:
     template<typename OtherType>
     Transform3d<OtherType> cast() const
     {
-        return Transform3d<OtherType>(translation_.template cast<OtherType>(),
-                                      rotation_.template cast<OtherType>());
+        return Transform3d<OtherType>(this->template cast<OtherType>());
     }
 
-    const Vector &translation() const
-    { return translation_; }
-    const Quaternion &rotation() const
-    { return rotation_; }
+//    //从std::array中获取值
+//    static Transform3d FromArrays(const std::array<FloatType, 4> &rotation,
+//                                  const std::array<FloatType, 3> &translation)
+//    {
+//        return Transform3d(Eigen::Map<const Vector>(translation.data()),
+//                           Eigen::Quaternion<FloatType>(rotation[0], rotation[1],
+//                                                        rotation[2], rotation[3]));
+//    }
+
+    // 获取平移
+    Vector getTranslation(){
+        return this->translation();
+    }
+
+    // 设置平移
+    void setTranslation(Vector t){
+//        this->translate(t);
+        this->translation()=t;
+    }
+
+    // 获取旋转 q
+    Eigen::Quaternion<FloatType> getRotation() const {
+        return Eigen::Quaternion<FloatType>(this->rotation());
+    }
+
+    Eigen::Matrix<FloatType,3,3> getRotationMatrix() const{
+        return this->rotation().matrix();
+    }
+
+    // 设置旋转
+    void setRotation(Eigen::Quaternion<FloatType> q_) {
+        this->rotate(q_);
+    }
+
+    void setRotation(Eigen::Matrix<FloatType,3,3> R_) {
+        this->rotate(R_);
+    }
+
     //求逆变换
-    Transform3d inverse() const
+    Transform3d inv() const
     {
-        const Quaternion rotation = rotation_.conjugate();
-        const Vector translation = -(rotation * translation_);
-        return Transform3d(translation, rotation);
+        //const Quaternion rotation = rotation_.conjugate();
+        //const Vector translation = -(rotation * translation_);
+        return Transform3d(this->inverse());
     }
 
     std::string DebugString() const
@@ -220,27 +232,25 @@ public:
         out.append(", ");
         out.append(std::to_string(translation().z()));
         out.append("], q: [");
-        out.append(std::to_string(rotation().w()));
+        out.append(std::to_string(getRotation().w()));
         out.append(", ");
-        out.append(std::to_string(rotation().x()));
+        out.append(std::to_string(getRotation().x()));
         out.append(", ");
-        out.append(std::to_string(rotation().y()));
+        out.append(std::to_string(getRotation().y()));
         out.append(", ");
-        out.append(std::to_string(rotation().z()));
+        out.append(std::to_string(getRotation().z()));
         out.append("] }");
         return out;
     }
 
-    bool IsValid() const
-    {
-        return !std::isnan(translation_.x()) && !std::isnan(translation_.y()) &&
-            !std::isnan(translation_.z()) &&
-            std::abs(FloatType(1) - rotation_.norm()) < FloatType(1e-3);
-    }
+//    bool IsValid() const
+//    {
+//        return !std::isnan(translation_.x()) && !std::isnan(translation_.y()) &&
+//            !std::isnan(translation_.z()) &&
+//            std::abs(FloatType(1) - rotation_.norm()) < FloatType(1e-3);
+//    }
 
 private:
-    Vector translation_;
-    Quaternion rotation_;
 };
 //操作符， 两个3D变换之间乘法
 template<typename FloatType>
@@ -251,13 +261,20 @@ Transform3d<FloatType> operator*(const Transform3d<FloatType> &lhs,
         lhs.rotation() * rhs.translation() + lhs.translation(),
         (lhs.rotation() * rhs.rotation()).normalized());
 }
-// 3D变换和点的运算
-template<typename FloatType>
-typename Transform3d<FloatType>::Vector operator*(
-    const Transform3d<FloatType> &rigid,
-    const typename Transform3d<FloatType>::Vector &point)
-{
-    return rigid.rotation() * point + rigid.translation();
+
+//// 3D变换和点的运算
+//template<typename FloatType>
+//typename Transform3d<FloatType>::Vector operator*(
+//    const Transform3d<FloatType> &rigid,
+//    const typename Transform3d<FloatType>::Vector &point)
+//{
+//    return Transform3d<double>::Vector(rigid.rotation() * point + rigid.translation());
+//}
+
+// T: 用于传参为Omega::common::Vec3d 的时候的
+template <typename T,typename FloatType>
+T operator*(const Transform3d<FloatType> &rigid,T pt){
+    return T(rigid.rotation()*pt+rigid.translation());
 }
 
 // This is needed for gmock.
@@ -275,7 +292,7 @@ using Transform3df = Transform3d<float>;
 // Converts (roll, pitch, yaw) to a unit length quaternion. Based on the URDF
 // specification http://wiki.ros.org/urdf/XML/joint.
 // 欧拉角转四元数
-Eigen::Quaterniond RollPitchYaw(double roll, double pitch, double yaw);
+//Eigen::Quaterniond RollPitchYaw(double roll, double pitch, double yaw);
 
 }  // namespace common
 }  // namespace transform
