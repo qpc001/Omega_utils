@@ -32,8 +32,10 @@
  * @namespace Omega::common::math
  * @brief Omega::common::math
  */
-namespace Omega {
-namespace common {
+namespace Omega
+{
+namespace common
+{
 
 /**
  * @class Vec2d
@@ -42,34 +44,50 @@ namespace common {
  * @brief 二维向量，可作为2D点
  */
 
-class Vec2d : public Eigen::Vector2d {
+class Vec2d: public Eigen::Vector2d
+{
 public:
-     Vec2d(const double x, const double y) noexcept : Eigen::Vector2d(x,y) {}
-     Vec2d() noexcept : Vec2d(0, 0) {}
+    Vec2d(const double x, const double y) noexcept
+        : Eigen::Vector2d(x, y)
+    {}
+    Vec2d() noexcept
+        : Vec2d(0, 0)
+    {}
 //    Vec2d(double x_,double y_) : Eigen::Vector2d(x_,y_) {}
 
-    void setX(double x_){
-        this->x()=x_;
+    void setX(double x_)
+    {
+        this->x() = x_;
     }
 
-    void setY(double y_){
-        this->y()=y_;
+    void setY(double y_)
+    {
+        this->y() = y_;
     }
 
-    double distanceTo(Vec2d other){
+    double distanceTo(Vec2d other)
+    {
         return std::sqrt(
-            (this->x()-other.x())*(this->x()-other.x())+
-            (this->y()-other.y())*(this->y()-other.y()));
+            (this->x() - other.x()) * (this->x() - other.x()) +
+                (this->y() - other.y()) * (this->y() - other.y()));
 
     }
 
-    std::string DebugString() const{
+    std::string DebugString() const
+    {
         return absl::StrCat("vec2d ( x = ", this->x(), " , y = ", this->y(), " )");
     }
 
     /// 一些运算符重载
     //! Sums two Vec2d
     Vec2d operator+(const Vec2d &other) const;
+
+    template<typename T>
+    Vec2d operator+(const Eigen::MatrixBase<T> &other) const
+    {
+        return Vec2d(this->x() + other(0, 0),
+                     this->y() + other(1, 0));
+    }
 
     //! Subtracts two Vec2d
     Vec2d operator-(const Vec2d &other) const;
@@ -89,8 +107,6 @@ public:
     //! Multiplies this Vec2d by a scalar
     Vec2d &operator*=(const double ratio);
 
-
-
     //! Divides this Vec2d by a scalar
     Vec2d &operator/=(const double ratio);
 
@@ -101,6 +117,14 @@ private:
     double kMathEpsilon = 1e-10;
 };
 
+// 重载乘法运算
+// 矩阵乘法
+template<typename T>
+Vec2d operator*(Eigen::MatrixBase<T> R_, Vec2d pt_)
+{
+    return Vec2d(R_(0, 0) * pt_.x() + R_(0, 1) * pt_.y(),
+                 R_(1, 0) * pt_.x() + R_(1, 1) * pt_.y());
+}
 
 }  // namespace common
 }  // namespace Omega

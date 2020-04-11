@@ -47,7 +47,7 @@ public:
     using Vector = Eigen::Matrix<FloatType, 2, 1>;
     using Rotation2D = Eigen::Rotation2D<FloatType>;
 
-    Transform2d() : Eigen::Isometry2d() {}
+    Transform2d() : Eigen::Isometry2d(Eigen::Isometry2d::Identity()) {}
     Transform2d( Eigen::Isometry2d T_) : Eigen::Isometry2d(T_) {}
 
 //    Transform2d(const Vector &translation, const Rotation2D &rotation)
@@ -118,20 +118,17 @@ Transform2d<FloatType> operator*(const Transform2d<FloatType> &lhs,
 }
 
 // 操作符，2D变换和点的变换
-template<typename FloatType>
-typename Transform2d<FloatType>::Vector operator*(
-    const Transform2d<FloatType> &rigid,
-    const typename Transform2d<FloatType>::Vector &point)
-{
-    return rigid.rotation() * point + rigid.translation();
-}
+//template<typename FloatType>
+//typename Transform2d<FloatType>::Vector operator*(
+//    const Transform2d<FloatType> &rigid,
+//    const typename Transform2d<FloatType>::Vector &point)
+//{
+//    return rigid.rotation() * point + rigid.translation();
+//}
 
-// 可能需要再优化一下
-template<typename FloatType>
-Omega::common::Vec2d operator*(const Transform2d<FloatType> &rigid,const Omega::common::Vec2d pt){
-    typename Transform2d<FloatType>::Vector pt_(pt.x(),pt.y());
-    pt_=rigid.rotation() *pt_+rigid.translation();
-    return Omega::common::Vec2d(pt_(0,0),pt_(1,0));
+template<typename  T, typename FloatType>
+T operator*(const Transform2d<FloatType> &rigid,const T pt){
+    return T(rigid.rotation()*pt+rigid.translation());
 }
 
 // This is needed for gmock.
@@ -261,15 +258,6 @@ Transform3d<FloatType> operator*(const Transform3d<FloatType> &lhs,
         lhs.rotation() * rhs.translation() + lhs.translation(),
         (lhs.rotation() * rhs.rotation()).normalized());
 }
-
-//// 3D变换和点的运算
-//template<typename FloatType>
-//typename Transform3d<FloatType>::Vector operator*(
-//    const Transform3d<FloatType> &rigid,
-//    const typename Transform3d<FloatType>::Vector &point)
-//{
-//    return Transform3d<double>::Vector(rigid.rotation() * point + rigid.translation());
-//}
 
 // T: 用于传参为Omega::common::Vec3d 的时候的
 template <typename T,typename FloatType>

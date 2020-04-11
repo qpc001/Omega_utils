@@ -120,6 +120,9 @@ void Vec3d_Tutorial()
     // 按元素相乘
     ADEBUG << "pt1和pt2按元素相乘，返回向量: " << pt1.cwiseProduct(pt2).transpose();
 
+    // 数乘
+    ADEBUG << "`5*pt1` 将返回Eigen形式的向量: "<< (5*pt1).transpose();
+    ADEBUG << "`pt1*5` 将返回Vec3d形式的向量: "<< (pt1*5).DebugString();
 }
 
 void rigid_2D_Transform_Tutorial()
@@ -134,7 +137,6 @@ void rigid_2D_Transform_Tutorial()
 
     /// 定义机体坐标系到世界坐标系的变换    (假设机器人在世界坐标系坐标为(3,3)，暂时没有旋转)
     transform::Transform2d<double> Twb;
-    Twb.setIdentity();
 //    Twb.translation()=Vec2d(3,3);
     Twb.setTranslate(Vec2d(3, 3));
     ADEBUG << "从机体坐标系到世界坐标系的变换: " << Twb.DebugString();
@@ -168,69 +170,66 @@ void rigid_3D_Transform_Tutorial()
     // 定义机体坐标系有一个点pb
     Vec3d pb(1, 1, 1);
 
-    ADEBUG<< pb.DebugString();
 
-    Eigen::Matrix3d R_;
-    R_.setIdentity();
-    auto p_new=R_*pb;
+    ADEBUG << "=============================3D变换: 平移部分-测试====================================";
+    /// 定义机体坐标系到世界坐标系的变换    (假设机器人在世界坐标系坐标为(3,3,3)，暂时没有旋转)
+    transform::Transform3d<double> Twb;
+    Twb.setTranslation(Vec3d(3, 3, 3));
+    ADEBUG << "从机体坐标系到世界坐标系的变换: " << Twb.DebugString();
+    ADEBUG << "机体坐标系原点在世界坐标系的坐标: " << Twb.getTranslation().transpose();
 
-    int a=1;
-//    ADEBUG << "=============================3D变换: 平移部分-测试====================================";
-//    /// 定义机体坐标系到世界坐标系的变换    (假设机器人在世界坐标系坐标为(3,3,3)，暂时没有旋转)
-//    transform::Transform3d<double> Twb;
-//    Twb.setTranslation(Vec3d(3, 3, 3));
-//    ADEBUG << "从机体坐标系到世界坐标系的变换: " << Twb.DebugString();
-//    ADEBUG << "机体坐标系原点在世界坐标系的坐标: " << Twb.getTranslation().transpose();
-//
-//    // 将机体坐标系的点pb，转换到世界坐标系下
-//    ADEBUG << "机体坐标系 点pb: " << pb.DebugString() << " 转换到世界坐标系，得到: " << (Twb * pb).DebugString();
-//
-//    // 将世界坐标系的点pw，转换到机体坐标系下
-//    ADEBUG << "世界坐标系 点pw: " << pw.DebugString() << " 转换到机体坐标系，得到: " << (Twb.inv() * pw).DebugString();
-//    //or
-//    ADEBUG << "（或者 使用父类的.inverse()）世界坐标系 点pw: " << pw.DebugString() << " 转换到机体坐标系，得到: "
-//           << Vec3d(Twb.inverse() * pw).DebugString();
+    // 将机体坐标系的点pb，转换到世界坐标系下
+    ADEBUG << "机体坐标系 点pb: " << pb.DebugString() << " 转换到世界坐标系，得到: " << (Twb * pb).DebugString();
 
-//    ADEBUG << "=============================3D变换: 旋转部分-测试====================================";
-//    ADEBUG << "============================ ZXY(312)欧拉角顺序 =====================================";
-//    Twb.setIdentity();
-//    // 设定欧拉角: 从 导航坐标系 到 机体坐标系 的欧拉角 (不考虑平移)
-//    EulerAnglesZXY<double> euler_(DegToRad(90),DegToRad(0),DegToRad(0));
-//    // 输出: 从 `机体坐标系` 到 `导航坐标系` 的旋转变换
-//    ADEBUG<< "ZXY : q "<<euler_.ToQuaternion().coeffs().transpose();        // 四元数形式 (自行实现)
-//    ADEBUG<< "ZXY : R \n"<<euler_.ToRotationMatrix();                       // 旋转矩阵形式(自行实现)
-//    ADEBUG<< "ZXY_q to R (Eigen) \n"<<euler_.ToQuaternion().matrix();       // 把自行实现的四元数 转换为 旋转矩阵(使用Eigen)
-//    ADEBUG<< "ZXY_q to DCM(my self impl) \n"<<q2DCM(euler_.ToQuaternion()); // 把自行实现的四元数 转换为 旋转谨遵(自行实现)
-//
-//    ADEBUG<< "从机体坐标系到世界坐标系的变换Twb: "<< Twb.DebugString();
-//
-//    // 设置旋转
-//    Twb.setRotation(euler_.ToQuaternion().matrix());
-//    // 将机体坐标系的点pb，转换到世界坐标系下
-//    ADEBUG<< "机体坐标系 点pb: "<<pb.DebugString()<<" 转换到世界坐标系，得到: "<<(Twb*pb).DebugString();
-//
-//    // 将世界坐标系的点pw，转换到机体坐标系下
-//    ADEBUG<< "世界坐标系 点pw: "<<pw.DebugString()<<" 转换到机体坐标系，得到: "<<(Twb.inv()*pb).DebugString();
-//
-//    ADEBUG << "============================ ZYX(321)欧拉角顺序 =====================================";
-//    Twb.setIdentity();
-//    // 设定欧拉角: 从 导航坐标系 到 机体坐标系 的欧拉角 (不考虑平移)
-//    // 这里表示: 需要将导航坐标系 1) 绕z轴逆时针旋转 __度  2) y轴 __  3) x轴 __
-//    EulerAnglesZYX<double> euler_zyx(DegToRad(90), DegToRad(0), DegToRad(0));
-//    // 输出: 从 `机体坐标系` 到 `导航坐标系` 的旋转变换
-//    ADEBUG << "ZXY : q " << euler_zyx.ToQuaternion().coeffs().transpose();        // 四元数形式 (自行实现)
-//    ADEBUG << "ZXY : R \n" << euler_zyx.ToRotationMatrix();                       // 旋转矩阵形式(自行实现)
-//    ADEBUG << "ZXY_q to R (Eigen) \n" << euler_zyx.ToQuaternion().matrix();       // 把自行实现的四元数 转换为 旋转矩阵(使用Eigen)
-//    ADEBUG << "ZXY_q to DCM(my self impl) \n" << q2DCM(euler_zyx.ToQuaternion()); // 把自行实现的四元数 转换为 旋转谨遵(自行实现)
-//
-//    Twb.setRotation(euler_zyx.ToQuaternion());
-//    ADEBUG << "从机体坐标系到世界坐标系的变换: " << Twb.DebugString();
-//
-//    // 将机体坐标系的点pb，转换到世界坐标系下
-//    ADEBUG << "机体坐标系 点pb: " << pb.DebugString() << " 转换到世界坐标系，得到: " << (Twb * pb).DebugString();
-//
-//    // 将世界坐标系的点pw，转换到机体坐标系下
-//    ADEBUG<< "世界坐标系 点pw: "<<pw.DebugString()<<" 转换到机体坐标系，得到: "<<(Twb.inv()*pb).DebugString();
+    // 将世界坐标系的点pw，转换到机体坐标系下
+    ADEBUG << "世界坐标系 点pw: " << pw.DebugString() << " 转换到机体坐标系，得到: " << (Twb.inv() * pw).DebugString();
+    //or
+    ADEBUG << "（或者 使用父类的.inverse()）世界坐标系 点pw: " << pw.DebugString() << " 转换到机体坐标系，得到: "
+           << Vec3d(Twb.inverse() * pw).DebugString();
+    //or
+    //ADEBUG << (Twb.inverse().matrix()*pw).DebugString();
+
+
+    ADEBUG << "=============================3D变换: 旋转部分-测试====================================";
+    ADEBUG << "============================ ZXY(312)欧拉角顺序 =====================================";
+    Twb.setIdentity();
+    // 设定欧拉角: 从 导航坐标系 到 机体坐标系 的欧拉角 (不考虑平移)
+    EulerAnglesZXY<double> euler_(DegToRad(90),DegToRad(0),DegToRad(0));
+    // 输出: 从 `机体坐标系` 到 `导航坐标系` 的旋转变换
+    ADEBUG<< "ZXY : q "<<euler_.ToQuaternion().coeffs().transpose();        // 四元数形式 (自行实现)
+    ADEBUG<< "ZXY : R \n"<<euler_.ToRotationMatrix();                       // 旋转矩阵形式(自行实现)
+    ADEBUG<< "ZXY_q to R (Eigen) \n"<<euler_.ToQuaternion().matrix();       // 把自行实现的四元数 转换为 旋转矩阵(使用Eigen)
+    ADEBUG<< "ZXY_q to DCM(my self impl) \n"<<q2DCM(euler_.ToQuaternion()); // 把自行实现的四元数 转换为 旋转谨遵(自行实现)
+
+    ADEBUG<< "从机体坐标系到世界坐标系的变换Twb: "<< Twb.DebugString();
+
+    // 设置旋转
+    Twb.setRotation(euler_.ToQuaternion().matrix());
+    // 将机体坐标系的点pb，转换到世界坐标系下
+    ADEBUG<< "机体坐标系 点pb: "<<pb.DebugString()<<" 转换到世界坐标系，得到: "<<(Twb*pb).DebugString();
+
+    // 将世界坐标系的点pw，转换到机体坐标系下
+    ADEBUG<< "世界坐标系 点pw: "<<pw.DebugString()<<" 转换到机体坐标系，得到: "<<(Twb.inv()*pb).DebugString();
+
+    ADEBUG << "============================ ZYX(321)欧拉角顺序 =====================================";
+    Twb.setIdentity();
+    // 设定欧拉角: 从 导航坐标系 到 机体坐标系 的欧拉角 (不考虑平移)
+    // 这里表示: 需要将导航坐标系 1) 绕z轴逆时针旋转 __度  2) y轴 __  3) x轴 __
+    EulerAnglesZYX<double> euler_zyx(DegToRad(90), DegToRad(0), DegToRad(0));
+    // 输出: 从 `机体坐标系` 到 `导航坐标系` 的旋转变换
+    ADEBUG << "ZXY : q " << euler_zyx.ToQuaternion().coeffs().transpose();        // 四元数形式 (自行实现)
+    ADEBUG << "ZXY : R \n" << euler_zyx.ToRotationMatrix();                       // 旋转矩阵形式(自行实现)
+    ADEBUG << "ZXY_q to R (Eigen) \n" << euler_zyx.ToQuaternion().matrix();       // 把自行实现的四元数 转换为 旋转矩阵(使用Eigen)
+    ADEBUG << "ZXY_q to DCM(my self impl) \n" << q2DCM(euler_zyx.ToQuaternion()); // 把自行实现的四元数 转换为 旋转谨遵(自行实现)
+
+    Twb.setRotation(euler_zyx.ToQuaternion());
+    ADEBUG << "从机体坐标系到世界坐标系的变换: " << Twb.DebugString();
+
+    // 将机体坐标系的点pb，转换到世界坐标系下
+    ADEBUG << "机体坐标系 点pb: " << pb.DebugString() << " 转换到世界坐标系，得到: " << (Twb * pb).DebugString();
+
+    // 将世界坐标系的点pw，转换到机体坐标系下
+    ADEBUG<< "世界坐标系 点pw: "<<pw.DebugString()<<" 转换到机体坐标系，得到: "<<(Twb.inv()*pb).DebugString();
 }
 void search_Tutoral()
 {
@@ -358,7 +357,7 @@ int main(int argc, char *argv[])
     cout << "===3. 2D/3D刚体变换===" << endl;
     //rigid_2D_Transform_Tutorial();
 
-    rigid_3D_Transform_Tutorial();
+    //rigid_3D_Transform_Tutorial();
 
 
     cout << "===6. zxy Euler Angle + quaternion_zxy===" << endl;

@@ -86,6 +86,15 @@ public:
     //! Sums two Vec3d
     Vec3d operator+(const Vec3d &other) const;
 
+    template<typename T>
+    Vec3d operator+(const Eigen::MatrixBase<T> &other) const
+    {
+        return Vec3d(this->x() + other(0,0),
+                     this->y() + other(1,0),
+                     this->z() + other(2,0));
+    }
+
+
     //! Subtracts two Vec3d
     Vec3d operator-(const Vec3d &other) const;
 
@@ -115,6 +124,8 @@ private:
 
 };
 
+// 重载乘法运算
+// 矩阵乘法
 template<typename T>
 Vec3d operator*(Eigen::MatrixBase<T> R_, Vec3d pt_)
 {
@@ -122,6 +133,12 @@ Vec3d operator*(Eigen::MatrixBase<T> R_, Vec3d pt_)
                  R_(1, 0) * pt_.x() + R_(1, 1) * pt_.y() + R_(1, 2) * pt_.z(),
                  R_(2, 0) * pt_.x() + R_(2, 1) * pt_.y() + R_(2, 2) * pt_.z());
 }
+
+// // 待修复
+//Vec3d operator*(const int ratio, Vec3d pt_){
+//    return pt_*ratio;
+//}// 数乘
+
 
 }  // namespace common
 }  // namespace Omega
