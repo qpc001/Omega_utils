@@ -168,21 +168,28 @@ void rigid_3D_Transform_Tutorial()
     // 定义机体坐标系有一个点pb
     Vec3d pb(1, 1, 1);
 
-    ADEBUG << "=============================3D变换: 平移部分-测试====================================";
-    /// 定义机体坐标系到世界坐标系的变换    (假设机器人在世界坐标系坐标为(3,3,3)，暂时没有旋转)
-    transform::Transform3d<double> Twb;
-    Twb.setTranslation(Vec3d(3, 3, 3));
-    ADEBUG << "从机体坐标系到世界坐标系的变换: " << Twb.DebugString();
-    ADEBUG << "机体坐标系原点在世界坐标系的坐标: " << Twb.getTranslation().transpose();
+    ADEBUG<< pb.DebugString();
 
-    // 将机体坐标系的点pb，转换到世界坐标系下
-    ADEBUG << "机体坐标系 点pb: " << pb.DebugString() << " 转换到世界坐标系，得到: " << (Twb * pb).DebugString();
+    Eigen::Matrix3d R_;
+    R_.setIdentity();
+    auto p_new=R_*pb;
 
-    // 将世界坐标系的点pw，转换到机体坐标系下
-    ADEBUG << "世界坐标系 点pw: " << pw.DebugString() << " 转换到机体坐标系，得到: " << (Twb.inv() * pb).DebugString();
-    //or
-    ADEBUG << "（或者 使用父类的.inverse()）世界坐标系 点pw: " << pw.DebugString() << " 转换到机体坐标系，得到: "
-           << Vec3d(Twb.inverse() * pb).DebugString();
+    int a=1;
+//    ADEBUG << "=============================3D变换: 平移部分-测试====================================";
+//    /// 定义机体坐标系到世界坐标系的变换    (假设机器人在世界坐标系坐标为(3,3,3)，暂时没有旋转)
+//    transform::Transform3d<double> Twb;
+//    Twb.setTranslation(Vec3d(3, 3, 3));
+//    ADEBUG << "从机体坐标系到世界坐标系的变换: " << Twb.DebugString();
+//    ADEBUG << "机体坐标系原点在世界坐标系的坐标: " << Twb.getTranslation().transpose();
+//
+//    // 将机体坐标系的点pb，转换到世界坐标系下
+//    ADEBUG << "机体坐标系 点pb: " << pb.DebugString() << " 转换到世界坐标系，得到: " << (Twb * pb).DebugString();
+//
+//    // 将世界坐标系的点pw，转换到机体坐标系下
+//    ADEBUG << "世界坐标系 点pw: " << pw.DebugString() << " 转换到机体坐标系，得到: " << (Twb.inv() * pw).DebugString();
+//    //or
+//    ADEBUG << "（或者 使用父类的.inverse()）世界坐标系 点pw: " << pw.DebugString() << " 转换到机体坐标系，得到: "
+//           << Vec3d(Twb.inverse() * pw).DebugString();
 
 //    ADEBUG << "=============================3D变换: 旋转部分-测试====================================";
 //    ADEBUG << "============================ ZXY(312)欧拉角顺序 =====================================";

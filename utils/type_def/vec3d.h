@@ -31,8 +31,10 @@
  * @namespace Omega::common::math
  * @brief Omega::common::math
  */
-namespace Omega {
-namespace common {
+namespace Omega
+{
+namespace common
+{
 
 /**
  * @class Vec3d
@@ -41,33 +43,43 @@ namespace common {
  * @brief 向量，可作为3d点
  */
 
-class Vec3d : public Eigen::Vector3d {
+class Vec3d: public Eigen::Vector3d
+{
 public:
-    Vec3d(double x_,double y_,double z_) : Eigen::Vector3d(x_,y_,z_) {}
-    Vec3d(Eigen::Vector3d pt_): Eigen::Vector3d(pt_){}
+    Vec3d(double x_, double y_, double z_)
+        : Eigen::Vector3d(x_, y_, z_)
+    {}
+    Vec3d(Eigen::Vector3d pt_)
+        : Eigen::Vector3d(pt_)
+    {}
 
-    void setX(double x_){
-        this->x()=x_;
+    void setX(double x_)
+    {
+        this->x() = x_;
     }
 
-    void setY(double y_){
-        this->y()=y_;
+    void setY(double y_)
+    {
+        this->y() = y_;
     }
 
-    void setZ(double z_){
-        this->z()=z_;
+    void setZ(double z_)
+    {
+        this->z() = z_;
     }
 
-    double distanceTo(Vec3d &other){
+    double distanceTo(Vec3d &other)
+    {
         return std::sqrt(
-            (this->x()-other.x())*(this->x()-other.x())+
-                (this->y()-other.y())*(this->y()-other.y())+
-                (this->z()-other.z())*(this->z()-other.z()));
+            (this->x() - other.x()) * (this->x() - other.x()) +
+                (this->y() - other.y()) * (this->y() - other.y()) +
+                (this->z() - other.z()) * (this->z() - other.z()));
 
     }
 
-    std::string DebugString() const{
-        return absl::StrCat("vec3d ( x = ", this->x(), " , y = ", this->y(), " , z= ",this->z(), " )");
+    std::string DebugString() const
+    {
+        return absl::StrCat("vec3d ( x = ", this->x(), " , y = ", this->y(), " , z= ", this->z(), " )");
     }
 
     /// 一些运算符重载
@@ -102,6 +114,14 @@ private:
     double kMathEpsilon = 1e-10;
 
 };
+
+template<typename T>
+Vec3d operator*(Eigen::MatrixBase<T> R_, Vec3d pt_)
+{
+    return Vec3d(R_(0, 0) * pt_.x() + R_(0, 1) * pt_.y() + R_(0, 2) * pt_.z(),
+                 R_(1, 0) * pt_.x() + R_(1, 1) * pt_.y() + R_(1, 2) * pt_.z(),
+                 R_(2, 0) * pt_.x() + R_(2, 1) * pt_.y() + R_(2, 2) * pt_.z());
+}
 
 }  // namespace common
 }  // namespace Omega
