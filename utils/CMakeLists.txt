@@ -8,11 +8,17 @@ if(CMAKE_COMPILER_IS_GNUCXX)
     message(STATUS "optional:-std=c++14")
 endif(CMAKE_COMPILER_IS_GNUCXX)
 
+set(TOP_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../)
+
 # include这些头文件路径
 include_directories(
         ${CMAKE_CURRENT_SOURCE_DIR}/fundamental
         ${CMAKE_CURRENT_SOURCE_DIR}/type_def
 )
+
+#Eigen
+#include(${TOP_DIR}/cmake/eigen.cmake)
+#include_directories("/usr/include/eigen3")
 
 # 需要编译的头文件
 set(FUNDAMENTAL_LIB

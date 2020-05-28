@@ -13,21 +13,33 @@ if(CMAKE_COMPILER_IS_GNUCXX)
     message(STATUS "optional:-std=c++14")
 endif(CMAKE_COMPILER_IS_GNUCXX)
 
+#list( APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
+
 #osqp
-find_package(osqp REQUIRED)
+#find_package(osqp REQUIRED)
+#include_directories(${osqp_INCLUDE_DIRS})
 
 #gtest
-add_subdirectory(gtest)
+add_subdirectory(third_party/gtest)
 enable_testing()
 include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 
 #absl
-add_subdirectory(abseil-cpp)
-include_directories(abseil-cpp/absl)
+add_subdirectory(third_party/abseil-cpp)
+include_directories(${abseil-cpp_SOURCE_DIR}/absl)
 
 #glog
-add_subdirectory(glog)
-include_directories(glog/src/)
+add_subdirectory(third_party/glog)
+include_directories(${glog_SOURCE_DIR}/src/)
+
+#gflag
+add_subdirectory(third_party/gflags)
+include_directories(${gflags_SOURCE_DIR}/src/)
+
+#Eigen
+include(cmake/FindEigen3.cmake)
+find_package(Eigen3 REQUIRED)
+include_directories(${EIGEN3_INCLUDE_DIR})
 
 ##uitls
 add_subdirectory(utils)
@@ -35,5 +47,6 @@ include_directories(utils)
 
 #test
 add_subdirectory(test)
+
 
 #target_link_libraries(${PROJECT_NAME} )

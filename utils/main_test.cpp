@@ -377,6 +377,6 @@ int main(int argc, char *argv[])
     cout << "===4. integral===" << endl;
     //integral_Tutorial();
 
-    google::ShutDownCommandLineFlags();
+    //google::ShutDownCommandLineFlags();
     return 0;
 }

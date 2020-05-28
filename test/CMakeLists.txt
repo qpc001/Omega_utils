@@ -9,14 +9,15 @@ if(CMAKE_COMPILER_IS_GNUCXX)
 endif(CMAKE_COMPILER_IS_GNUCXX)
 
 #osqp
-find_package(osqp REQUIRED)
-include_directories(${osqp_INCLUDE_DIRS})
+#find_package(osqp REQUIRED)
+#include_directories(${osqp_INCLUDE_DIRS})
 
 # include这些头文件路径
 include_directories(
         ${CMAKE_CURRENT_SOURCE_DIR}/../utils/fundamental
         ${CMAKE_CURRENT_SOURCE_DIR}/../utils/type_def
 )
+#include_directories("/usr/include/eigen3")
 
 #fundamental/vec2d_test.cc
 add_executable(${PROJECT_NAME}
@@ -30,5 +31,5 @@ add_executable(${PROJECT_NAME}
 
 #target_link
 target_link_libraries(${PROJECT_NAME} gtest gtest_main  common)
-target_link_libraries(${PROJECT_NAME} PRIVATE osqp::osqp)
-#add_test(NAME {PROJECT_NAME} COMMAND ${PROJECT_NAME})
+target_link_libraries(${PROJECT_NAME} PRIVATE )
+#target_link_libraries(${PROJECT_NAME} PRIVATE osqp::osqp)
