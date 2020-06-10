@@ -29,7 +29,8 @@ set(FUNDAMENTAL_LIB
         fundamental/matrix_operations.cc
         fundamental/math_utils.cc
         fundamental/integral.cc
-        type_def/transform/euler_angles_zxy.h)
+#        type_def/transform/euler_angles_zxy.h
+        StringHexByte/StringHexByte.cpp)
 
 # 编译成库
 add_library(common ${FUNDAMENTAL_LIB})
