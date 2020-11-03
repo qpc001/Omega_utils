@@ -15,7 +15,7 @@ endif(CMAKE_COMPILER_IS_GNUCXX)
 
 #ROS下作为Package的时候，需要设置为ON，然后删除 build/ deve/ 文件夹
 #然后重新编译
-option(ENABLE_ROS "option for ROS" OFF)
+option(ENABLE_ROS "option for ROS" ON)
 add_definitions(-DENABLE_ROS)
 
 if(ENABLE_ROS)

@@ -2,18 +2,19 @@
 // Created by msi on 2020/4/8.
 //
 
-#include "vec2d.h"
-#include "vec3d.h"
+#include "Types/vec/vec2d.h"
+#include "Types/vec/vec3d.h"
 #include "search.h"
-#include "matrix_operations.h"
-#include "math_utils.h"
-#include "integral.h"
-#include "transform/euler_angles_zxy.h"
-#include "transform/quaternion_zxy.h"
-#include "transform/euler_angles_zyx.h"
-#include "log/log.h"
+#include "Operation/matrix_operations.h"
+#include "Operation/math_utils.h"
+#include "Operation/integral.h"
+#include "Types/transform/euler_angles_zxy.h"
+#include "Types/transform/quaternion_zxy.h"
+#include "Types/transform/euler_angles_zyx.h"
+#include "Types/transform/rigid_transform.h"
+#include "Log/log.h"
 #include <iostream>
-#include <transform/rigid_transform.h>
+
 
 using namespace std;
 using namespace Omega::common::math;

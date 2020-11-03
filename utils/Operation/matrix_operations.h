@@ -28,7 +28,7 @@
 #include "Eigen/Dense"
 #include "Eigen/SVD"
 
-#include "../log/log.h"
+#include "Log/log.h"
 
 /**
  * @namespace Omega::common::math

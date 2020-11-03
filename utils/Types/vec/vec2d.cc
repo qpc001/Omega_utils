@@ -19,7 +19,7 @@
 #include <cmath>
 
 #include "absl/strings/str_cat.h"
-#include "../log/log.h"
+#include "Log/log.h"
 
 namespace Omega
 {

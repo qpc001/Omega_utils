@@ -12,8 +12,9 @@ set(TOP_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../)
 
 # include这些头文件路径
 include_directories(
-        ${CMAKE_CURRENT_SOURCE_DIR}/fundamental
-        ${CMAKE_CURRENT_SOURCE_DIR}/type_def
+        ${CMAKE_CURRENT_SOURCE_DIR}/Operation
+        ${CMAKE_CURRENT_SOURCE_DIR}/Types
+        ${CMAKE_CURRENT_SOURCE_DIR}/Log
 )
 
 #Eigen
@@ -22,13 +23,13 @@ include_directories(
 
 # 需要编译的头文件
 set(FUNDAMENTAL_LIB
-        type_def/vec2d.cc
-        type_def/vec3d.cc
-        type_def/transform/rigid_transform.cc
-        fundamental/search.cc
-        fundamental/matrix_operations.cc
-        fundamental/math_utils.cc
-        fundamental/integral.cc
+        Types/vec/vec2d.cc
+        Types/vec/vec3d.cc
+        Types/transform/rigid_transform.cc
+        Operation/search.cc
+        Operation/matrix_operations.cc
+        Operation/math_utils.cc
+        Operation/integral.cc
 #        type_def/transform/euler_angles_zxy.h
         StringHexByte/StringHexByte.cpp)
 

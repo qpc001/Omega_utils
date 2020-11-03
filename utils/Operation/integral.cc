@@ -18,7 +18,7 @@
 
 #include <array>
 
-#include "../log/log.h"
+#include "Log/log.h"
 
 namespace Omega {
 namespace common {

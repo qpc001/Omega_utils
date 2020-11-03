@@ -24,10 +24,9 @@
 #include "Eigen/Core"
 #include "Eigen/Geometry"
 
-#include "math_utils.h"
-#include "port.h"
-#include "vec2d.h"
-#include "vec3d.h"
+#include "Operation/math_utils.h"
+#include "Types/vec/vec2d.h"
+#include "Types/vec/vec3d.h"
 
 /** 刚体变换2D/3D 类
  *
