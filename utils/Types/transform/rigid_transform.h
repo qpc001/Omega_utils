@@ -154,7 +154,8 @@ public:
 
     //构造函数 1.平移+四元数 2.平移+轴角
     Transform3d() : Eigen::Isometry3d(Eigen::Isometry3d::Identity()) {}
-    Transform3d(Eigen::Isometry3d T_) : Eigen::Isometry3d(T_) {}
+    Transform3d(Eigen::Isometry3d &&T_) : Eigen::Isometry3d(T_) {}
+    //Transform3d(Eigen::Isometry3d T_) : Eigen::Isometry3d(T_) {}
     Transform3d(const Vector &translation, const Quaternion &rotation)
     : Eigen::Isometry3d(rotation,translation)
     {}
