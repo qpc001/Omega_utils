@@ -25,7 +25,7 @@
 #include <utility>
 #include <time.h>
 
-#include "Eigen/Dense"
+#include <eigen3/Eigen/Dense>
 
 /**
  * @namespace Omega::common::math

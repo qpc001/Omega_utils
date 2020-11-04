@@ -15,7 +15,7 @@ endif(CMAKE_COMPILER_IS_GNUCXX)
 
 #ROS下作为Package的时候，需要设置为ON，然后删除 build/ deve/ 文件夹
 #然后重新编译
-option(ENABLE_ROS "option for ROS" ON)
+option(ENABLE_ROS "option for ROS" OFF)
 add_definitions(-DENABLE_ROS)
 
 if(ENABLE_ROS)
@@ -41,14 +41,6 @@ include_directories(
     ${catkin_INCLUDE_DIRS}
     )
 
-#osqp
-#find_package(osqp REQUIRED)
-#include_directories(${osqp_INCLUDE_DIRS})
-
-#absl
-add_subdirectory(third_party/abseil-cpp)
-include_directories(${abseil-cpp_SOURCE_DIR}/absl)
-
 if(NOT ENABLE_ROS)
     #gtest
     add_subdirectory(third_party/gtest)
@@ -64,6 +56,10 @@ if(NOT ENABLE_ROS)
     include_directories(${gflags_SOURCE_DIR}/src/)
 endif()
 
+#absl
+add_subdirectory(third_party/abseil-cpp)
+include_directories(${abseil-cpp_SOURCE_DIR}/absl)
+
 #Eigen
 include(cmake/FindEigen3.cmake)
 find_package(Eigen3 REQUIRED)
@@ -72,6 +68,3 @@ include_directories(${EIGEN3_INCLUDE_DIR})
 ##uitls
 add_subdirectory(utils)
 include_directories(utils)
-
-#test
-#add_subdirectory(test)

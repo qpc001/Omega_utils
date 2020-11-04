@@ -9,17 +9,15 @@ if(CMAKE_COMPILER_IS_GNUCXX)
 endif(CMAKE_COMPILER_IS_GNUCXX)
 
 set(TOP_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../)
+file(GLOB_RECURSE HEADER_FILES  "*.h" "*.hpp")
 
+# 在最下面的"target_include_directories"也有这个include_的功能
 # include这些头文件路径
 include_directories(
         ${CMAKE_CURRENT_SOURCE_DIR}/Operation
         ${CMAKE_CURRENT_SOURCE_DIR}/Types
         ${CMAKE_CURRENT_SOURCE_DIR}/Log
 )
-
-#Eigen
-#include(${TOP_DIR}/cmake/eigen.cmake)
-#include_directories("/usr/include/eigen3")
 
 # 需要编译的头文件
 set(FUNDAMENTAL_LIB
@@ -30,12 +28,18 @@ set(FUNDAMENTAL_LIB
         Operation/matrix_operations.cc
         Operation/math_utils.cc
         Operation/integral.cc
-#        type_def/transform/euler_angles_zxy.h
         StringHexByte/StringHexByte.cpp)
 
+# 输出文件目录
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/Omega_utils/Lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/Omega_utils/Lib)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/Omega_utils/Bin)
+
 # 编译成库
-add_library(common ${FUNDAMENTAL_LIB})
+add_library(common ${FUNDAMENTAL_LIB} ${HEADER_FILES})
+add_library(Omega::common ALIAS common)
 target_link_libraries(common glog absl::strings)
+target_include_directories(common PUBLIC  ${CMAKE_CURRENT_SOURCE_DIR})  #解决引用库时的头文件依赖问题
 
 # 使用说明
 add_executable(${PROJECT_NAME}  main_test.cpp)
